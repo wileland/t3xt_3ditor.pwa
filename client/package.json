@@ -4,9 +4,11 @@
   "description": "Front-end for the pwa-text-editor",
   "private": true,
   "scripts": {
-    "start": "webpack serve --mode development --open",
-    "build": "webpack --mode production",
-    "watch": "webpack --watch"
+    "start": "webpack serve --mode development --open --config webpack.config.js",
+    "build": "webpack --mode production --config webpack.config.js",
+    "watch": "webpack --watch --config webpack.config.js",
+    "clean": "rimraf ./dist",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "author": "William Haynes",
   "license": "MIT",
@@ -25,6 +27,7 @@
     "webpack": "^5.51.1",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.0.0",
-    "workbox-webpack-plugin": "^6.6.0"
+    "workbox-webpack-plugin": "^6.6.0",
+    "rimraf": "^3.0.2"
   }
 }
