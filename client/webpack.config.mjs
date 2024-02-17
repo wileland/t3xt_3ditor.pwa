@@ -3,6 +3,9 @@ import WebpackPwaManifest from "webpack-pwa-manifest";
 import path from "path";
 import { InjectManifest } from "workbox-webpack-plugin";
 
+// Resolve the directory name using import.meta.url
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 export default {
   mode: "development",
   entry: {
@@ -12,7 +15,10 @@ export default {
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: '/',
+    publicPath: "/",
+  },
+  devServer: {
+    port: 3001, // Specify the port here
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -20,7 +26,7 @@ export default {
       title: "Text Editor PWA",
     }),
     new InjectManifest({
-      swSrc: "./src-sw.js",
+      swSrc: path.resolve(__dirname, "src", "src-sw.js"), // Resolving the correct path to src-sw.js
       swDest: "src-sw.js",
     }),
     new WebpackPwaManifest({
@@ -35,9 +41,9 @@ export default {
       publicPath: ".",
       icons: [
         {
-          src: path.resolve("src/images/logo.png"),
+          src: "./src/assets/icons/logo.png", // Adjusted to use a relative path
           sizes: [96, 128, 192, 256, 384, 512],
-          destination: path.join("assets", "icons"),
+          destination: "assets/icons", // Adjusted destination path
         },
       ],
     }),
@@ -68,5 +74,9 @@ export default {
         },
       },
     ],
+  },
+
+  resolve: {
+    extensions: [".js"], // Added to ensure '.js' extension is automatically resolved
   },
 };

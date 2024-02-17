@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import htmlRoutes from './htmlRoutes.js'; // Ensure the path is correct
+import htmlRoutes from './htmlRoutes.js'; 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
