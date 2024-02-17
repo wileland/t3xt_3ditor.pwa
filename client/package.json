@@ -4,8 +4,8 @@
   "description": "Frontend for the PWA text editor",
   "type": "module",
   "scripts": {
-    "start": "webpack serve --mode development --open --config webpack.config.js",
-    "build": "webpack --mode production --config webpack.config.js",
+    "start": "webpack serve --mode development --open --config webpack.config.mjs",
+    "build": "webpack --mode production --config webpack.config.mjs",
     "clean": "rimraf dist",
     "test": "echo \"No tests specified\" && exit 0"
   },
