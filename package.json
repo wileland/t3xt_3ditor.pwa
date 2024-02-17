@@ -1,52 +1,20 @@
 {
   "name": "pwa-text-editor",
   "version": "1.0.0",
-  "description": "A browser-based text editor that runs as a Progressive Web Application (PWA).",
-  "main": "server.js",
+  "description": "A PWA text editor",
+  "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon server/server.js --ignore client",
-    "client": "npm start --prefix client",
-    "build": "npm run build --prefix client",
-    "install-client": "npm install --prefix client",
-    "postinstall": "npm run build --prefix client",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --experimental-modules server/server.js",
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
+    "install": "cd server && npm install && cd ../client && npm install",
+    "postinstall": "npm run build --prefix client"
   },
-  "keywords": [
-    "text-editor",
-    "pwa",
-    "indexeddb",
-    "webpack",
-    "babel",
-    "workbox"
-  ],
-  "author": "William Haynes",
-  "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1",
     "uuid": "^9.0.1"
   },
+  "author": "Your Name",
+  "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.13.0",
-    "@babel/preset-env": "^7.13.0",
-    "babel-loader": "^8.2.2",
-    "concurrently": "^5.2.0",
-    "css-loader": "^5.0.2",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.3.1",
-    "nodemon": "^3.0.2",
-    "style-loader": "^2.0.0",
-    "webpack": "^5.24.0",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^4.15.1",
-    "webpack-pwa-manifest": "^4.3.0",
-    "workbox-webpack-plugin": "^6.1.5"
-  },
-  "browserslist": [
-    "last 1 version",
-    "> 1%",
-    "maintained node versions",
-    "not dead"
-  ]
+    "concurrently": "^7.0.0"
+  }
 }

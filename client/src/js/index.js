@@ -1,40 +1,25 @@
-import { Workbox } from "workbox-window";
-import Editor from "./editor";
-
-// Import styles
-import "../css/style.css";
+import { Workbox } from 'workbox-window';
+import Editor from './editor';
+import '../css/style.css'; // Import styles
 
 // Initialize the editor
 const editor = new Editor();
 
-// Check if service workers are supported
-if ("serviceWorker" in navigator) {
-  // Register the Workbox service worker
-  const workboxSW = new Workbox("/src-sw.js");
+// Register the service worker if supported
+if ('serviceWorker' in navigator) {
+  const workboxSW = new Workbox('/service-worker.js');
 
-  workboxSW
-    .register()
-    .then(() => {
-      console.log("Service worker registered successfully");
-    })
-    .catch((error) => {
-      console.error("Service worker registration failed:", error);
-    });
+  workboxSW.register()
+    .then(() => console.log('Service worker registered successfully'))
+    .catch((error) => console.error('Service worker registration failed:', error));
 
-  // Add an event listener to customize the service worker update cycle
-  workboxSW.addEventListener("installed", (event) => {
+  workboxSW.addEventListener('installed', (event) => {
     if (event.isUpdate) {
-      // Display a notification to inform the user about new content
-      const updateNotification = new Notification("New Content Available", {
-        body: "Click to refresh and load the latest version.",
-      });
-
-      // Handle user interaction with the notification
-      updateNotification.addEventListener("click", () => {
+      if (confirm('New content available! Would you like to update?')) {
         window.location.reload();
-      });
+      }
     }
   });
 } else {
-  console.error("Service workers are not supported in this browser.");
+  console.error('Service workers are not supported in this browser.');
 }
