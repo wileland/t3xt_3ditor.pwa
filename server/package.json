@@ -1,0 +1,24 @@
+{
+  "name": "pwa-text-editor-server",
+  "version": "1.0.0",
+  "description": "Back-end for the pwa-text-editor",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "express",
+    "pwa",
+    "node",
+    "server"
+  ],
+  "author": "William Haynes",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
