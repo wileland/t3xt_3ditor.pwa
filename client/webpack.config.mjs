@@ -1,6 +1,7 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import WebpackPwaManifest from "webpack-pwa-manifest";
 import path from "path";
+import { InjectManifest } from "workbox-webpack-plugin";
 
 // Resolve the directory name using import.meta.url
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -29,20 +30,12 @@ const plugins = [
       },
     ],
   }),
+  new InjectManifest({
+    swSrc: new URL("src/src-sw.js", import.meta.url).pathname, // Resolving the correct path to src-sw.js
+    swDest: "src-sw.js",
+    exclude: [/\.map$/, /manifest$/, /\.htaccess$/], // Exclude certain files from being precached
+  })
 ];
-
-// Check if InjectManifest plugin is already present
-if (!process.argv.includes("--watch")) {
-  // Add InjectManifest plugin only if not in watch mode
-  const { InjectManifest } = require("workbox-webpack-plugin");
-  plugins.push(
-    new InjectManifest({
-      swSrc: path.resolve(__dirname, "src", "src-sw.js"), // Resolving the correct path to src-sw.js
-      swDest: "src-sw.js",
-      exclude: [/\.map$/, /manifest$/, /\.htaccess$/], // Exclude certain files from being precached
-    })
-  );
-}
 
 export default {
   mode: "development",
