@@ -1,10 +1,48 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import WebpackPwaManifest from "webpack-pwa-manifest";
 import path from "path";
-import { InjectManifest } from "workbox-webpack-plugin";
 
 // Resolve the directory name using import.meta.url
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+// Define the plugins array
+const plugins = [
+  new HtmlWebpackPlugin({
+    template: "./index.html",
+    title: "Text Editor PWA",
+  }),
+  new WebpackPwaManifest({
+    fingerprints: false,
+    inject: true,
+    name: "Text Editor PWA",
+    short_name: "TextEditor",
+    description: "A browser-based text editor that runs as a PWA",
+    background_color: "#225ca3",
+    theme_color: "#225ca3",
+    start_url: ".",
+    publicPath: ".",
+    icons: [
+      {
+        src: "./src/assets/icons/logo.png", // Adjusted to use a relative path
+        sizes: [96, 128, 192, 256, 384, 512],
+        destination: "assets/icons", // Adjusted destination path
+      },
+    ],
+  }),
+];
+
+// Check if InjectManifest plugin is already present
+if (!process.argv.includes("--watch")) {
+  // Add InjectManifest plugin only if not in watch mode
+  const { InjectManifest } = require("workbox-webpack-plugin");
+  plugins.push(
+    new InjectManifest({
+      swSrc: path.resolve(__dirname, "src", "src-sw.js"), // Resolving the correct path to src-sw.js
+      swDest: "src-sw.js",
+      exclude: [/\.map$/, /manifest$/, /\.htaccess$/], // Exclude certain files from being precached
+    })
+  );
+}
 
 export default {
   mode: "development",
@@ -20,35 +58,7 @@ export default {
   devServer: {
     port: 3001, // Specify the port here
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "./index.html",
-      title: "Text Editor PWA",
-    }),
-    new InjectManifest({
-      swSrc: path.resolve(__dirname, "src", "src-sw.js"), // Resolving the correct path to src-sw.js
-      swDest: "src-sw.js",
-    }),
-    new WebpackPwaManifest({
-      fingerprints: false,
-      inject: true,
-      name: "Text Editor PWA",
-      short_name: "TextEditor",
-      description: "A browser-based text editor that runs as a PWA",
-      background_color: "#225ca3",
-      theme_color: "#225ca3",
-      start_url: ".",
-      publicPath: ".",
-      icons: [
-        {
-          src: "./src/assets/icons/logo.png", // Adjusted to use a relative path
-          sizes: [96, 128, 192, 256, 384, 512],
-          destination: "assets/icons", // Adjusted destination path
-        },
-      ],
-    }),
-  ],
-
+  plugins: plugins, // Use the plugins array defined above
   module: {
     rules: [
       {
@@ -75,7 +85,6 @@ export default {
       },
     ],
   },
-
   resolve: {
     extensions: [".js"], // Added to ensure '.js' extension is automatically resolved
   },

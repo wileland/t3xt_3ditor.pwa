@@ -1,7 +1,6 @@
-import { getDb, putDb } from './database';
-import { header } from './header';
+import { getDb, putDb } from './database.js';
+import { header } from './header.js';
 import CodeMirror from 'codemirror';
-import 'codemirror/mode/javascript/javascript'; // Import JavaScript mode
 import 'codemirror/theme/monokai.css'; // Import the Monokai theme
 
 export default class Editor {
