@@ -39,3 +39,6 @@ Contributions are welcome. Please open an issue or submit a pull request for any
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+Screen Shot of deployed App:
+![image](https://github.com/wileland/t3xt_3ditor.pwa/assets/142263841/4dc2d576-1ddd-4b55-a22b-4bc68082f59f)
