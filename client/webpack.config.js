@@ -2,8 +2,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WebpackPwaManifest = require("webpack-pwa-manifest");
 const path = require("path");
 const { InjectManifest } = require("workbox-webpack-plugin");
-const WorkboxPlugin = require("workbox-webpack-plugin");
-
 
 module.exports = () => {
   return {
@@ -15,35 +13,31 @@ module.exports = () => {
     output: {
       filename: "[name].bundle.js",
       path: path.resolve(__dirname, "dist"),
+      publicPath: '/',
     },
     plugins: [
-      new WorkboxPlugin.GenerateSW({
-        // Other Workbox configuration options...
-        // Make sure the swDest is set to the root directory if required
-        swDest: "/src-sw.js", // This will output the service worker to the root
-      }),
       new HtmlWebpackPlugin({
         template: "./index.html",
-        title: "73x7 3d170r PWA",
+        title: "Text Editor PWA",
       }),
       new InjectManifest({
-        swSrc: "/src-sw.js",
-        swDest: "service-worker.js",
+        swSrc: "./src-sw.js",
+        swDest: "src-sw.js",
       }),
       new WebpackPwaManifest({
         fingerprints: false,
         inject: true,
-        name: "73x7 3d170r PWA",
-        short_name: "73x7 3d170r",
+        name: "Text Editor PWA",
+        short_name: "TextEditor",
         description: "A browser-based text editor that runs as a PWA",
         background_color: "#225ca3",
         theme_color: "#225ca3",
-        start_url: "/",
-        publicPath: "/",
+        start_url: ".",
+        publicPath: ".",
         icons: [
           {
             src: path.resolve("src/images/logo.png"),
-            sizes: [96, 128, 192, 256, 384, 512], // multiple sizes
+            sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join("assets", "icons"),
           },
         ],
