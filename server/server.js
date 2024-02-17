@@ -17,10 +17,13 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware for parsing application/json
 app.use(express.json());
 
-// Serve the index.html file for all other requests to support SPA
+// Serve the index.html file for all other requests to support SPA- also added error handling
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'), (err) => {
+    if (err) {
+      res.status(500).send('Server Error');
+    }
+  });
 });
-
 // Start the server on the defined PORT
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
