@@ -16,6 +16,7 @@
     "codemirror": "^5.65.0",
     "idb": "^6.1.2",
     "webpack-pwa-manifest": "^4.3.0",
+    "workbox-precaching": "^7.0.0",
     "workbox-window": "^6.6.0"
   },
   "devDependencies": {

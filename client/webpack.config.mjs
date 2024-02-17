@@ -1,12 +1,10 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import WebpackPwaManifest from "webpack-pwa-manifest";
 import path from "path";
-import { InjectManifest } from "workbox-webpack-plugin";
+import { GenerateSW } from "workbox-webpack-plugin";
 
-// Resolve the directory name using import.meta.url
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-// Define the plugins array
 const plugins = [
   new HtmlWebpackPlugin({
     template: "./index.html",
@@ -24,17 +22,17 @@ const plugins = [
     publicPath: ".",
     icons: [
       {
-        src: "./src/assets/icons/logo.png", // Adjusted to use a relative path
+        src: "./src/assets/icons/logo.png",
         sizes: [96, 128, 192, 256, 384, 512],
-        destination: "assets/icons", // Adjusted destination path
+        destination: "assets/icons",
       },
     ],
   }),
-  new InjectManifest({
-    swSrc: new URL("src/src-sw.js", import.meta.url).pathname, // Resolving the correct path to src-sw.js
-    swDest: "src-sw.js",
-    exclude: [/\.map$/, /manifest$/, /\.htaccess$/], // Exclude certain files from being precached
-  })
+  new GenerateSW({
+    clientsClaim: true,
+    skipWaiting: true,
+    exclude: [/\.map$/, /manifest$/, /\.htaccess$/],
+  }),
 ];
 
 export default {
@@ -49,9 +47,9 @@ export default {
     publicPath: "/",
   },
   devServer: {
-    port: 3001, // Specify the port here
+    port: 3001,
   },
-  plugins: plugins, // Use the plugins array defined above
+  plugins: plugins,
   module: {
     rules: [
       {
@@ -79,6 +77,6 @@ export default {
     ],
   },
   resolve: {
-    extensions: [".js"], // Added to ensure '.js' extension is automatically resolved
+    extensions: [".js"],
   },
 };

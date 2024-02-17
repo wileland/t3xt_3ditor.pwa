@@ -1,52 +1,45 @@
-import { offlineFallback, warmStrategyCache } from 'workbox-recipes';
+import { precacheAndRoute } from 'workbox-precaching';
 import { CacheFirst } from 'workbox-strategies';
 import { registerRoute } from 'workbox-routing';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
-import { precacheAndRoute } from 'workbox-precaching/precacheAndRoute';
 
+// Precache and route any assets from the __WB_MANIFEST variable
 precacheAndRoute(self.__WB_MANIFEST);
 
+// Define a CacheFirst strategy for caching pages
 const pageCache = new CacheFirst({
   cacheName: 'page-cache',
   plugins: [
     new CacheableResponsePlugin({
-      statuses: [0, 200],
+      statuses: [200], // Cache only successful responses
     }),
     new ExpirationPlugin({
-      maxAgeSeconds: 30 * 24 * 60 * 60,
+      maxAgeSeconds: 30 * 24 * 60 * 60, // Cache for 30 days
     }),
   ],
 });
 
-warmStrategyCache({
-  urls: ['/index.html', '/'],
-  strategy: pageCache,
-});
-
-registerRoute(({ request }) => request.mode === 'navigate', pageCache);
-
-// Asset caching implemented
+// Register a route to handle navigation requests
 registerRoute(
-  // Define a filter function that will only match requests for assets like CSS, JS, and images
+  ({ request }) => request.mode === 'navigate',
+  ({ event }) => pageCache.handle({ event })
+);
+
+// Register a route to cache assets like stylesheets, scripts, and worker scripts
+registerRoute(
   ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
-  // Use a CacheFirst strategy for these requests
   new CacheFirst({
-    // Name of the cache
     cacheName: 'asset-cache',
     plugins: [
-      // This plugin will cache responses with these headers to a maximum of 200 entries
       new CacheableResponsePlugin({
-        statuses: [0, 200], // Cache only successful and opaque responses
+        statuses: [200], // Cache only successful responses
       }),
-      // This plugin will keep entries in the cache for 30 days before it gets purged
       new ExpirationPlugin({
         maxEntries: 200, // Limit the number of entries in the cache
         maxAgeSeconds: 30 * 24 * 60 * 60, // Cache for 30 days
-        purgeOnQuotaError: true, // Safe fallback
+        purgeOnQuotaError: true, // Handle quota errors by purging old entries
       }),
     ],
   })
 );
-
-// Updated to cache "worker" type requests as well, as per grader's feedback.
