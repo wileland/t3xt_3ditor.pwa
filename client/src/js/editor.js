@@ -1,8 +1,8 @@
 import { getDb, putDb } from './database';
 import { header } from './header';
 import CodeMirror from 'codemirror';
-import 'codemirror/mode/javascript/javascript'; // Import JavaScript mode if needed
-import 'codemirror/theme/monokai.css'; // Import the theme if needed
+import 'codemirror/mode/javascript/javascript'; // Import JavaScript mode
+import 'codemirror/theme/monokai.css'; // Import the Monokai theme
 
 export default class Editor {
   constructor() {
@@ -10,33 +10,41 @@ export default class Editor {
   }
 
   async init() {
+    // Initialize CodeMirror with the editor settings
     this.editor = new CodeMirror(document.querySelector('#main'), {
-      value: header,
-      mode: 'javascript',
-      theme: 'monokai',
-      lineNumbers: true,
-      lineWrapping: true,
-      autofocus: true,
-      indentUnit: 2,
-      tabSize: 2,
+      value: header, // Start with predefined header content
+      mode: 'javascript', // Set syntax highlighting for JavaScript
+      theme: 'monokai', // Use Monokai theme for the editor
+      lineNumbers: true, // Display line numbers
+      lineWrapping: true, // Wrap lines that are too long
+      autofocus: true, // Focus the editor on page load
+      indentUnit: 2, // Set indentation units to 2 spaces
+      tabSize: 2, // Set tab size to 2 spaces
     });
 
-    const data = await getDb();
-    if (data?.length) {
-      this.editor.setValue(data[data.length - 1]?.value || '');
+    try {
+      const data = await getDb();
+      // Load the most recent entry into the editor
+      if (data?.length) {
+        this.editor.setValue(data[data.length - 1]?.value || '');
+      }
+    } catch (error) {
+      console.error('Failed to load data into the editor:', error);
     }
 
+    // Save changes to the database, debouncing to reduce frequency
     this.editor.on('change', this.debounce(() => {
       const content = this.editor.getValue();
-      putDb(content);
+      putDb({content}); // Ensure the structure matches your DB expectations
     }, 500));
   }
 
+  // Debounce method to limit the rate at which a function is executed
   debounce(func, timeout = 300) {
     let timer;
     return (...args) => {
       clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+      timer = setTimeout(() => func.apply(this, args), timeout);
     };
   }
 }
